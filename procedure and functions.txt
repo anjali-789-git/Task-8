@@ -1,0 +1,57 @@
+
+1. Stored Procedure – Get Orders by Customer
+
+This procedure takes a customer ID as input and returns all orders placed by that customer.
+
+DELIMITER //
+
+CREATE PROCEDURE GetOrdersByCustomer(IN cust_id INT)
+BEGIN
+    SELECT 
+        o.OrderID,
+        o.OrderDate,
+        o.TotalAmount
+    FROM Orders o
+    WHERE o.CustomerID = cust_id;
+END //
+
+DELIMITER ;
+
+Usage Example:
+
+CALL GetOrdersByCustomer(1);
+
+This will return all orders for customer with CustomerID = 1.
+
+
+---
+
+2. Stored Function – Calculate Total Order Value
+
+This function takes an Order ID and returns the total value of that order by summing up quantity × price.
+
+DELIMITER //
+
+CREATE FUNCTION GetOrderTotal(order_id INT)
+RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+    DECLARE total DECIMAL(10,2);
+    
+    SELECT SUM(Quantity * Price)
+    INTO total
+    FROM OrderDetails
+    WHERE OrderID = order_id;
+    
+    RETURN total;
+END //
+
+DELIMITER ;
+
+Usage Example:
+
+SELECT GetOrderTotal(1) AS TotalOrderValue;
+
+This will return the total value of order with OrderID = 1.
+
+
